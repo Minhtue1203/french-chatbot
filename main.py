@@ -11,15 +11,17 @@ openai.api_key = api_key
 
 app = FastAPI()
 
+
 class TextRequest(BaseModel):
     text: str
+    style: str = "standard"  # Par défaut, le style est neutre
 
 @app.post("/correct")
 async def correct_text(request: TextRequest):
-    # Define messages for OpenAI API
+    """Corrige le texte en fonction du style sélectionné."""
     messages = [
         {"role": "system", "content": prompt.get_system_message()},
-        {"role": "user", "content": prompt.generate_prompt(request.text)}
+        {"role": "user", "content": prompt.generate_prompt(request.text, request.style)}
     ]
 
     completion = openai.chat.completions.create(
@@ -31,4 +33,8 @@ async def correct_text(request: TextRequest):
 
     corrected_text = completion.choices[0].message.content
 
-    return {"corrected_text": corrected_text}
+    return {
+        "original_text": request.text,
+        "corrected_text": corrected_text,
+        "style": request.style
+    }
