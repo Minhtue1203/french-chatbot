@@ -20,7 +20,7 @@ if st.button("✅ Corriger"):
     if user_input:
         # Envoi de la requête à l'API FastAPI avec le texte et le style sélectionné
         response = requests.post(
-            "http://127.0.0.1:8000/correct",
+            "http://34.38.128.4/correct",
             json={"text": user_input, "style": style_options[style_choice]}
         )
 
